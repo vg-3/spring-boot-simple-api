@@ -5,14 +5,16 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/amigos_code_database
-    username: root
-    password: Beast@098
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: varshithgowdav
+    password: Leela@1422
+    url: jdbc:postgresql://localhost:5432/customer
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
     show-sql: false
   main:
     web-application-type: servlet

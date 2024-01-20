@@ -5,20 +5,30 @@ import lombok.Data;
 
 @Entity
 @Data
+@Table(
+        name = "customer",
+        uniqueConstraints ={
+                @UniqueConstraint(
+                        name = "unique_email",
+                        columnNames = "email"
+                )
+        }
+)
 public class Customer {
     @Id()
     @SequenceGenerator(
-            name = "customer_sequence_id",
-            sequenceName = "customer_sequence_id"
+            name = "customer_id_seq",
+            sequenceName = "customer_id_seq",
+            allocationSize = 1
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
-                    generator = "customer_sequence_id"
+                    generator = "customer_id_seq"
     )
-    private Integer id;
+    private long id;
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
     private String email;
     @Column(nullable = false)
-    private Integer age;
+    private int age;
 }
