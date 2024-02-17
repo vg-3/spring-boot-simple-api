@@ -1,43 +1,50 @@
 package com.varshith.controller;
 
+
 import com.varshith.entities.Customer;
-import com.varshith.exceptions.DuplicateResourceException;
-import com.varshith.exceptions.ResourceNotFoundException;
 import com.varshith.records.CustomerRegistrationRequest;
 import com.varshith.records.CustomerUpdateRequest;
-import com.varshith.services.CustomerServiceImpl;
+import com.varshith.services.CustomerService;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.module.ResolutionException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
 
+    private  final CustomerService customerService;
 
-    private final CustomerServiceImpl customerService;
-
-    public CustomerController(CustomerServiceImpl customerService) {
+    public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
-    @PostMapping("")
-    public void saveCustomer(@RequestBody Customer customer){
-        customerService.saveCustomer(customer);
-    }
     @GetMapping("")
-    public List<Customer> getAllCustomers(){
-        return customerService.getAllCustomers();
+    public List<Customer> getCustomers (){
+        return  customerService.getAllCustomers();
     }
-    @GetMapping("/{id}")
-    public Customer getCustomerById(@PathVariable("id") Integer id){
-        return customerService.getCustomerById(id);
+    @GetMapping("{customerId}")
+    public Customer getCustomer (@PathVariable Integer customerId){
+        return  customerService.getCustomerById(customerId);
     }
 
-    @PutMapping("/{id}")
-    public  void updateCustomer( @PathVariable("id") Integer id
-            ,@RequestBody CustomerUpdateRequest customerUpdateRequest ){
-        customerService.updateCustomer(id, customerUpdateRequest);
+    @PostMapping("")
+    public void  addCustomer(@RequestBody CustomerRegistrationRequest customerRegistrationRequest){
+        customerService.addCustomer(customerRegistrationRequest);
     }
+
+    @DeleteMapping("{customerId}")
+    public  void deleteCustomer(@PathVariable Integer id) {
+        customerService.deleteCustomer(id);
+    }
+
+
+    @PutMapping("{customerId}")
+    public void  updateCustomer
+            (@PathVariable Integer customerId ,
+             @RequestBody CustomerUpdateRequest customerUpdateRequest){
+        customerService.updateCustomer(customerId,customerUpdateRequest);
+    }
+
+
 }

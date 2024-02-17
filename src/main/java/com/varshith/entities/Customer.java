@@ -1,10 +1,14 @@
 package com.varshith.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(
         name = "customer",
         uniqueConstraints ={
@@ -31,4 +35,10 @@ public class Customer {
     private String email;
     @Column(nullable = false)
     private int age;
+
+    public Customer(String name, String email, Integer age) {
+        this.name = name;
+        this.email = email;
+        this.age  = age;
+    }
 }
