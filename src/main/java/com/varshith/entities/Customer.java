@@ -34,7 +34,7 @@ public class Customer {
     @Column(nullable = false)
     private String email;
     @Column(nullable = false)
-    private int age;
+    private Integer age;
 
     public Customer(String name, String email, Integer age) {
         this.name = name;

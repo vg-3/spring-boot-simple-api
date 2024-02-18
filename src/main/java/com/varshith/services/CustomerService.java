@@ -17,9 +17,14 @@ public class CustomerService  {
 
     private final  CustomerDao customerDao;
 
-    public CustomerService(@Qualifier("jpa") CustomerDao customerDao) {
+    public CustomerService(@Qualifier("jdbc") CustomerDao customerDao) {
         this.customerDao = customerDao;
     }
+
+//    FOR JPA IMPLEMENTATION
+//    public CustomerService(@Qualifier("jpa") CustomerDao customerDao) {
+//        this.customerDao = customerDao;
+//    }
 
     public List<Customer> getAllCustomers() {
         return customerDao.selectAllCustomers();

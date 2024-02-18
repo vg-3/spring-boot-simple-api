@@ -46,5 +46,4 @@ public class CustomerController {
         customerService.updateCustomer(customerId,customerUpdateRequest);
     }
 
-
 }
