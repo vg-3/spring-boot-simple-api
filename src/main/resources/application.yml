@@ -5,9 +5,9 @@ server:
 
 spring:
   datasource:
-    username: varshith
-    password: 12345
-    url: jdbc:postgresql://54.82.96.15:5432/customer
+    username: varshithgowdav
+    password: Leela@1422
+    url: jdbc:postgresql://localhost:5432/customer
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
