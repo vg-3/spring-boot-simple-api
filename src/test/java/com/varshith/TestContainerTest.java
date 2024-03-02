@@ -1,5 +1,6 @@
 package com.varshith;
 
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -22,5 +23,15 @@ public class TestContainerTest {
   void canStartPostgresDb() {
     assertThat(POSTGRE_SQL_CONTAINER.isRunning()).isTrue();
     assertThat(POSTGRE_SQL_CONTAINER.isCreated()).isTrue();
+  }
+
+  @Test
+  void canApplyFLywayMigrations() {
+    Flyway flyway = Flyway.configure().dataSource(
+        POSTGRE_SQL_CONTAINER.getJdbcUrl(),
+        POSTGRE_SQL_CONTAINER.getUsername(),
+        POSTGRE_SQL_CONTAINER.getPassword()
+    ).load();
+    flyway.migrate();
   }
 }
