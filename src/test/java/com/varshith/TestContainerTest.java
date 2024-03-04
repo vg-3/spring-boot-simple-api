@@ -10,6 +10,4 @@ public class TestContainerTest extends AbstractTestContainer {
     assertThat(POSTGRE_SQL_CONTAINER.isRunning()).isTrue();
     assertThat(POSTGRE_SQL_CONTAINER.isCreated()).isTrue();
   }
-
-
 }
