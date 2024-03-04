@@ -3,12 +3,15 @@ package com.varshith.services;
 import com.varshith.AbstractTestContainer;
 import com.varshith.entities.Customer;
 import com.varshith.rowmapper.CustomerRowMappper;
+import org.hibernate.Interceptor;
 import org.hibernate.engine.jdbc.spi.JdbcServices;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,62 +39,238 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestContainer {
     );
     underTest.insertCustomer(customer);
 
-    List<Customer> expected = underTest.selectAllCustomers();
+    List<Customer> actual = underTest.selectAllCustomers();
 
-  assertThat(expected).isNotEmpty();
+  assertThat(actual).isNotEmpty();
   }
 
   @Test
   void selectCustomerById() {
-    //Given
 
-    //When
+    String email  =  faker.internet().safeEmailAddress()+"-"+ UUID.randomUUID();
 
-    //Then
+    Customer customer = new Customer(
+        faker.name().fullName(),
+        email,
+        20
+    );
+    underTest.insertCustomer(customer);
+    Long customerId  = underTest
+        .selectAllCustomers()
+        .stream()
+        .filter(c->c.getEmail().equals(email))
+        .map(Customer::getId)
+        .findFirst()
+        .orElseThrow();
+   Optional<Customer> actual =  underTest.selectCustomerById(customerId);
+   assertThat(actual).isPresent().hasValueSatisfying(c->{
+     assertThat(c.getId()).isEqualTo(customerId);
+     assertThat(c.getName()).isEqualTo(customer.getName());
+     assertThat(c.getAge()).isEqualTo(customer.getAge());
+     assertThat(c.getEmail()).isEqualTo(email);
+       }
+   );
   }
-
+  @Test
+  void selectCustomerByIdWillReturnEmptyWhenIdNotPresent() {
+    Long customerId = -1L;
+    Optional<Customer> actual =  underTest.selectCustomerById(customerId);
+    assertThat(actual).isEmpty();
+  }
   @Test
   void insertCustomer() {
-    //Given
+    String email  =  faker.internet().safeEmailAddress()+"-"+ UUID.randomUUID();
 
-    //When
+    Customer customer = new Customer(
+        faker.name().fullName(),
+        email,
+        20
+    );
+    underTest.insertCustomer(customer);
+    Long customerId  = underTest
+        .selectAllCustomers()
+        .stream()
+        .filter(c->c.getEmail().equals(email))
+        .map(Customer::getId)
+        .findFirst()
+        .orElseThrow();
 
-    //Then
+    Optional<Customer> actual =  underTest.selectCustomerById(customerId);
+    assertThat(actual).isNotEmpty();
   }
 
   @Test
-  void updateCustomer() {
-    //Given
+  void updateCustomerName() {
+    String email  =  faker.internet().safeEmailAddress()+"-"+ UUID.randomUUID();
+    Integer age = 20;
+    String name  =   faker.name().fullName();
+    Customer customer = new Customer(
+        name,
+        email,
+        age
+    );
+    underTest.insertCustomer(customer);
+    Long customerId  = underTest
+        .selectAllCustomers()
+        .stream()
+        .filter(c->c.getEmail().equals(email))
+        .map(Customer::getId)
+        .findFirst()
+        .orElseThrow();
 
-    //When
+    String newName = "test name";
+    Customer update  = new Customer();
+    update.setId(customerId);
+    update.setName(newName);
+    underTest.updateCustomer(update);
 
-    //Then
+    Optional<Customer> actual = underTest.selectCustomerById(customerId);
+    assertThat(actual).isPresent().hasValueSatisfying(c->{
+      assertThat(c.getName()).isEqualTo(newName);
+      assertThat(c.getId()).isEqualTo(customerId);
+      assertThat(c.getAge()).isEqualTo(customer.getAge());
+      assertThat(c.getEmail()).isEqualTo(customer.getEmail());
+    });
+  }
+
+  @Test
+  void updateCustomerAge() {
+    String email  =  faker.internet().safeEmailAddress()+"-"+ UUID.randomUUID();
+    Integer age = 20;
+    String name  =   faker.name().fullName();
+    Customer customer = new Customer(
+        name,
+        email,
+        age
+    );
+    underTest.insertCustomer(customer);
+    Long customerId  = underTest
+        .selectAllCustomers()
+        .stream()
+        .filter(c->c.getEmail().equals(email))
+        .map(Customer::getId)
+        .findFirst()
+        .orElseThrow();
+
+    Integer newAge = 40;
+    Customer update  = new Customer();
+    update.setId(customerId);
+    update.setAge(newAge);
+    underTest.updateCustomer(update);
+
+    Optional<Customer> actual = underTest.selectCustomerById(customerId);
+    assertThat(actual).isPresent().hasValueSatisfying(c->{
+      assertThat(c.getName()).isEqualTo(customer.getName());
+      assertThat(c.getId()).isEqualTo(customerId);
+      assertThat(c.getAge()).isEqualTo(newAge);
+      assertThat(c.getEmail()).isEqualTo(customer.getEmail());
+    });
+  }
+
+  @Test
+  void updateCustomerEmail() {
+    String email  =  faker.internet().safeEmailAddress()+"-"+ UUID.randomUUID();
+    Integer age = 20;
+    String name  =   faker.name().fullName();
+    Customer customer = new Customer(
+        name,
+        email,
+        age
+    );
+    underTest.insertCustomer(customer);
+    Long customerId  = underTest
+        .selectAllCustomers()
+        .stream()
+        .filter(c->c.getEmail().equals(email))
+        .map(Customer::getId)
+        .findFirst()
+        .orElseThrow();
+
+    String newEmail = "test@gmail.com";
+    Customer update  = new Customer();
+    update.setId(customerId);
+    update.setEmail(newEmail);
+    underTest.updateCustomer(update);
+
+    Optional<Customer> actual = underTest.selectCustomerById(customerId);
+    assertThat(actual).isPresent().hasValueSatisfying(c->{
+      assertThat(c.getName()).isEqualTo(customer.getName());
+      assertThat(c.getId()).isEqualTo(customerId);
+      assertThat(c.getAge()).isEqualTo(customer.getAge());
+      assertThat(c.getEmail()).isEqualTo(newEmail);
+    });
   }
 
   @Test
   void deleteCustomer() {
-    //Given
+    String email  =  faker.internet().safeEmailAddress()+"-"+ UUID.randomUUID();
+    Integer age = 20;
+    String name  =   faker.name().fullName();
+    Customer customer = new Customer(
+        name,
+        email,
+        age
+    );
+    underTest.insertCustomer(customer);
+    Long customerId  = underTest
+        .selectAllCustomers()
+        .stream()
+        .filter(c->c.getEmail().equals(email))
+        .map(Customer::getId)
+        .findFirst()
+        .orElseThrow();
 
-    //When
-
-    //Then
+    underTest.deleteCustomer(customerId);
+    Optional<Customer> actual =  underTest.selectCustomerById(customerId);
+    assertThat(actual).isNotPresent();
   }
 
   @Test
   void existsPersonWithEmail() {
-    //Given
+    String email  =  faker.internet().safeEmailAddress()+"-"+ UUID.randomUUID();
+    Customer customer = new Customer(
+        faker.name().fullName(),
+        email,
+        20
+    );
+    underTest.insertCustomer(customer);
 
-    //When
+    boolean actual = underTest.existsPersonWithEmail(email);
+    assertThat(actual).isTrue();
+  }
 
-    //Then
+  @Test
+  void existsPersonWithEmailReturnsFalseWhenDoesNotExists() {
+    String email = faker.internet().safeEmailAddress()+"-"+UUID.randomUUID();
+    boolean actual = underTest.existsPersonWithEmail(email);
+    assertThat(actual).isFalse();
   }
 
   @Test
   void existsPersonWithId() {
-    //Given
+    String email  =  faker.internet().safeEmailAddress()+"-"+ UUID.randomUUID();
+    Customer customer = new Customer(
+        faker.name().fullName(),
+        email,
+        20
+    );
+    underTest.insertCustomer(customer);
 
-    //When
+    Long customerId  = underTest
+        .selectAllCustomers()
+        .stream()
+        .filter(c->c.getEmail().equals(email))
+        .map(Customer::getId)
+        .findFirst()
+        .orElseThrow();
+    boolean actual = underTest.existsPersonWithId(customerId);
+    assertThat(actual).isTrue();
+  }
 
-    //Then
+  @Test
+  void existsPersonWithIdReturnsFalseWhenDoesNotExists() {
+    Long customerId = -1L;
+    boolean actual = underTest.existsPersonWithId(customerId);
+    assertThat(actual).isFalse();
   }
 }

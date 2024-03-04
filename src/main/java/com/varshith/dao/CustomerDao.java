@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface CustomerDao {
      List<Customer> selectAllCustomers();
-     Optional<Customer> selectCustomerById(Integer id);
+     Optional<Customer> selectCustomerById(Long id);
      void insertCustomer(Customer customer);
      void updateCustomer(Customer customer);
-     void deleteCustomer(Integer id);
+     void deleteCustomer(Long id);
      boolean existsPersonWithEmail(String email);
-     boolean existsPersonWithId(Integer id);
+     boolean existsPersonWithId(Long id);
 
 }
