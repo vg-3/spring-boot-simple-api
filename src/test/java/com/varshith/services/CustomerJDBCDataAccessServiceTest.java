@@ -221,7 +221,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestContainer {
         .findFirst()
         .orElseThrow();
 
-    String newEmail = "test@gmail.com";
+    String newEmail = "testAll@gmail.com";
     Integer newAge = 30;
     String newName = "test name";
     Customer update  = new Customer();
