@@ -2,7 +2,6 @@ package com.varshith.services;
 
 import com.varshith.dao.CustomerDao;
 import com.varshith.entities.Customer;
-import com.varshith.records.CustomerUpdateRequest;
 import com.varshith.repositiories.CustomerRepository;
 import org.springframework.stereotype.Repository;
 
