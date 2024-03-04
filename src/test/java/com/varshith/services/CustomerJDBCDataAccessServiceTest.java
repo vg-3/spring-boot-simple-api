@@ -203,6 +203,75 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestContainer {
   }
 
   @Test
+  void updateCustomerAllFields() {
+    String email  =  faker.internet().safeEmailAddress()+"-"+ UUID.randomUUID();
+    Integer age = 20;
+    String name  =   faker.name().fullName();
+    Customer customer = new Customer(
+        name,
+        email,
+        age
+    );
+    underTest.insertCustomer(customer);
+    Long customerId  = underTest
+        .selectAllCustomers()
+        .stream()
+        .filter(c->c.getEmail().equals(email))
+        .map(Customer::getId)
+        .findFirst()
+        .orElseThrow();
+
+    String newEmail = "test@gmail.com";
+    Integer newAge = 30;
+    String newName = "test name";
+    Customer update  = new Customer();
+    update.setId(customerId);
+    update.setEmail(newEmail);
+    update.setName(newName);
+    update.setAge(newAge);
+    underTest.updateCustomer(update);
+
+    Optional<Customer> actual = underTest.selectCustomerById(customerId);
+    assertThat(actual).isPresent().hasValueSatisfying(c->{
+      assertThat(c.getName()).isEqualTo(newName);
+      assertThat(c.getId()).isEqualTo(customerId);
+      assertThat(c.getAge()).isEqualTo(newAge);
+      assertThat(c.getEmail()).isEqualTo(newEmail);
+    });
+  }
+
+  @Test
+  void doNotUpdateCustomer() {
+    String email  =  faker.internet().safeEmailAddress()+"-"+ UUID.randomUUID();
+    Integer age = 20;
+    String name  =   faker.name().fullName();
+    Customer customer = new Customer(
+        name,
+        email,
+        age
+    );
+    underTest.insertCustomer(customer);
+    Long customerId  = underTest
+        .selectAllCustomers()
+        .stream()
+        .filter(c->c.getEmail().equals(email))
+        .map(Customer::getId)
+        .findFirst()
+        .orElseThrow();
+
+    Customer update  = new Customer();
+    update.setId(customerId);
+    underTest.updateCustomer(update);
+
+    Optional<Customer> actual = underTest.selectCustomerById(customerId);
+    assertThat(actual).isPresent().hasValueSatisfying(c->{
+      assertThat(c.getName()).isEqualTo(customer.getName());
+      assertThat(c.getId()).isEqualTo(customerId);
+      assertThat(c.getAge()).isEqualTo(customer.getAge());
+      assertThat(c.getEmail()).isEqualTo(customer.getEmail());
+    });
+  }
+  @Test
   void deleteCustomer() {
     String email  =  faker.internet().safeEmailAddress()+"-"+ UUID.randomUUID();
     Integer age = 20;
