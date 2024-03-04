@@ -6,6 +6,7 @@ import com.varshith.rowmapper.CustomerRowMappper;
 import org.hibernate.Interceptor;
 import org.hibernate.engine.jdbc.spi.JdbcServices;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,9 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class CustomerJDBCDataAccessServiceTest extends AbstractTestContainer {
 
   private  CustomerJDBCDataAccessService underTest;
-  private final CustomerRowMappper customerRowMappper =  new CustomerRowMappper();
+  private  final CustomerRowMappper customerRowMappper =  new CustomerRowMappper();
 
-  @BeforeAll
+  @BeforeEach
   void setUp() {
     underTest = new CustomerJDBCDataAccessService(
       getJdbcTemplate(),

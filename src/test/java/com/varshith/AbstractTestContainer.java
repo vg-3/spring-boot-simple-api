@@ -44,8 +44,8 @@ public abstract class AbstractTestContainer {
         .create()
         .driverClassName(POSTGRE_SQL_CONTAINER.getDriverClassName())
         .url(POSTGRE_SQL_CONTAINER.getJdbcUrl())
-        .username(POSTGRE_SQL_CONTAINER.getDriverClassName())
-        .password(POSTGRE_SQL_CONTAINER.getDriverClassName())
+        .username(POSTGRE_SQL_CONTAINER.getUsername())
+        .password(POSTGRE_SQL_CONTAINER.getPassword())
         .build();
   }
 
