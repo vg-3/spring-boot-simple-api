@@ -133,7 +133,7 @@ class CustomerServiceTest {
         customerId,name,email,20
     );
 
-    when(underTest.getCustomerById(customerId)).thenReturn(customer);
+    when(customerDao.selectCustomerById(customerId)).thenReturn(Optional.of(customer));
     when(customerDao.existsPersonWithEmail(email)).thenReturn(false);
     CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(
     "new name","newName@gamil.com",20
@@ -159,7 +159,7 @@ class CustomerServiceTest {
         customerId,name,email,20
     );
 
-    when(underTest.getCustomerById(customerId)).thenReturn(customer);
+    when(customerDao.selectCustomerById(customerId)).thenReturn(Optional.of(customer));
     when(customerDao.existsPersonWithEmail(email)).thenReturn(false);
     CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(
         null , "newName@gamil.com",null
@@ -185,7 +185,7 @@ class CustomerServiceTest {
         customerId,name,email,20
     );
 
-    when(underTest.getCustomerById(customerId)).thenReturn(customer);
+    when(customerDao.selectCustomerById(customerId)).thenReturn(Optional.of(customer));
     CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(
         null,null,20
     );
@@ -210,7 +210,7 @@ class CustomerServiceTest {
         customerId,name,email,20
     );
 
-    when(underTest.getCustomerById(customerId)).thenReturn(customer);
+    when(customerDao.selectCustomerById(customerId)).thenReturn(Optional.of(customer));
     CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(
         "new name",null,null
     );
@@ -236,7 +236,7 @@ class CustomerServiceTest {
     );
 
     String newEmail = "alex@gamil.com";
-    when(underTest.getCustomerById(customerId)).thenReturn(customer);
+    when(customerDao.selectCustomerById(customerId)).thenReturn(Optional.of(customer));
     when(customerDao.existsPersonWithEmail(email)).thenReturn(true);
     CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(
         null,email,null
@@ -257,7 +257,7 @@ class CustomerServiceTest {
     Customer customer =  new Customer(
         customerId,name,email,age
     );
-    when(underTest.getCustomerById(customerId)).thenReturn(customer);
+    when(customerDao.selectCustomerById(customerId)).thenReturn(Optional.of(customer));
     CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(
         name,email,age
     );
